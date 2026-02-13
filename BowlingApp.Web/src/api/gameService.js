@@ -1,44 +1,47 @@
-// =============================================================================================
-// STUDENT TODO: Implement API Calls
-// =============================================================================================
-// The frontend is currently using Mock data. Your task is to implement the actual API calls
-// to your .NET Backend.
-//
-// 1. Ensure your .NET Backend is running (e.g., http://localhost:5000).
-// 2. Use fetch() or axios to make HTTP requests.
-// 3. Update the matching 'VITE_APP_MODE' in your .env file to 'LIVE' to test this.
+const MODE = import.meta.env.VITE_APP_MODE;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://localhost:7264/api";
 
-const API_BASE_URL = "http://localhost:5000/api/game"; // Update port if necessary
+const handleResponse = async (response) => {
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || "API request failed");
+    }
+    return await response.json();
+};
 
 export const createGame = async (playerNames) => {
-    // TODO: Call POST /api/game with playerNames
-    // Example:
-    // const response = await fetch(API_BASE_URL, {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(playerNames)
-    // });
-    // return await response.json();
-    throw new Error("createGame API not implemented yet!");
+    if (MODE !== "LIVE") {
+        throw new Error("App is not in LIVE mode");
+    }
+
+    const response = await fetch(`${API_BASE_URL}/game`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(playerNames),
+    });
+
+    return handleResponse(response);
 };
 
 export const getGame = async (gameId) => {
-    // TODO: Call GET /api/game/{gameId}
-    // Example:
-    // const response = await fetch(`${API_BASE_URL}/${gameId}`);
-    // return await response.json();
-    throw new Error("getGame API not implemented yet!");
+    if (MODE !== "LIVE") {
+        throw new Error("App is not in LIVE mode");
+    }
+
+    const response = await fetch(`${API_BASE_URL}/game/${gameId}`);
+    return handleResponse(response);
 };
 
 export const rollBall = async (gameId, playerId, pins) => {
-    // TODO: Call POST /api/game/{gameId}/roll
-    // Body: { playerId, pins }
-    // Example:
-    // const response = await fetch(`${API_BASE_URL}/${gameId}/roll`, {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ playerId, pins })
-    // });
-    // return await response.json();
-    throw new Error("rollBall API not implemented yet!");
+    if (MODE !== "LIVE") {
+        throw new Error("App is not in LIVE mode");
+    }
+
+    const response = await fetch(`${API_BASE_URL}/game/${gameId}/roll`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ playerId, pins }),
+    });
+
+    return handleResponse(response);
 };
